@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/Pakattocopy_1.js"></script>
+        <script src="data/Pakatto_2.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[-5.2633904109141385,119.49739621924168],[-5.221837899914086,119.57781034068005]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_HereWegoSatellite_0');
+        map.getPane('pane_HereWegoSatellite_0').style.zIndex = 400;
+        var layer_HereWegoSatellite_0 = L.tileLayer('https://2.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?app_id=eAdkWGYRoc4RfxVo0Z4B&app_code=TrLJuXVK62IQk0vuXFzaig&lg=eng', {
+            pane: 'pane_HereWegoSatellite_0',
+            opacity: 1.0,
+            attribution: '<a href="https://developer.here.com/documentation/map-tile/dev_guide/topics/resource-copyright.html">Map tiles by Here Wego</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_HereWegoSatellite_0;
+        map.addLayer(layer_HereWegoSatellite_0);
+        function pop_Pakattocopy_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kk'] !== null ? autolinker.link(String(feature.properties['kk']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gid'] !== null ? autolinker.link(String(feature.properties['gid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['bstt'] !== null ? autolinker.link(String(feature.properties['bstt']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['luas'] !== null ? autolinker.link(String(feature.properties['luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['bsbtt'] !== null ? autolinker.link(String(feature.properties['bsbtt']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['idsls'] !== null ? autolinker.link(String(feature.properties['idsls']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kdkab'] !== null ? autolinker.link(String(feature.properties['kdkab']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kdkec'] !== null ? autolinker.link(String(feature.properties['kdkec']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kdsls'] !== null ? autolinker.link(String(feature.properties['kdsls']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nmkab'] !== null ? autolinker.link(String(feature.properties['nmkab']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nmkec'] !== null ? autolinker.link(String(feature.properties['nmkec']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nmsls'] !== null ? autolinker.link(String(feature.properties['nmsls']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['bstt_k'] !== null ? autolinker.link(String(feature.properties['bstt_k']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kddesa'] !== null ? autolinker.link(String(feature.properties['kddesa']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kdprov'] !== null ? autolinker.link(String(feature.properties['kdprov']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['khusus'] !== null ? autolinker.link(String(feature.properties['khusus']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['muatan'] !== null ? autolinker.link(String(feature.properties['muatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nmdesa'] !== null ? autolinker.link(String(feature.properties['nmdesa']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nmprov'] !== null ? autolinker.link(String(feature.properties['nmprov']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['posisi'] !== null ? autolinker.link(String(feature.properties['posisi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['rw_dki'] !== null ? autolinker.link(String(feature.properties['rw_dki']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['segmen'] !== null ? autolinker.link(String(feature.properties['segmen']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['subsls'] !== null ? autolinker.link(String(feature.properties['subsls']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['sumber'] !== null ? autolinker.link(String(feature.properties['sumber']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['dom_sls'] !== null ? autolinker.link(String(feature.properties['dom_sls']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['periode'] !== null ? autolinker.link(String(feature.properties['periode']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tingkat'] !== null ? autolinker.link(String(feature.properties['tingkat']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['idsubsls'] !== null ? autolinker.link(String(feature.properties['idsubsls']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nm_gedung'] !== null ? autolinker.link(String(feature.properties['nm_gedung']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['wil_campur'] !== null ? autolinker.link(String(feature.properties['wil_campur']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['iddesa'] !== null ? autolinker.link(String(feature.properties['iddesa']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Pakattocopy_1_0() {
+            return {
+                pane: 'pane_Pakattocopy_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Pakattocopy_1');
+        map.getPane('pane_Pakattocopy_1').style.zIndex = 401;
+        map.getPane('pane_Pakattocopy_1').style['mix-blend-mode'] = 'normal';
+        var layer_Pakattocopy_1 = new L.geoJson(json_Pakattocopy_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Pakattocopy_1',
+            layerName: 'layer_Pakattocopy_1',
+            pane: 'pane_Pakattocopy_1',
+            onEachFeature: pop_Pakattocopy_1,
+            style: style_Pakattocopy_1_0,
+        });
+        bounds_group.addLayer(layer_Pakattocopy_1);
+        map.addLayer(layer_Pakattocopy_1);
+        function pop_Pakatto_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PROVINSI'] !== null ? autolinker.link(String(feature.properties['PROVINSI']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KABUPATEN'] !== null ? autolinker.link(String(feature.properties['KABUPATEN']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KECAMATAN'] !== null ? autolinker.link(String(feature.properties['KECAMATAN']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DESA'] !== null ? autolinker.link(String(feature.properties['DESA']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DUSUN</th>\
+                        <td>' + (feature.properties['DUSUN'] !== null ? autolinker.link(String(feature.properties['DUSUN']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">RT/RW</th>\
+                        <td>' + (feature.properties['RT/RW'] !== null ? autolinker.link(String(feature.properties['RT/RW']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Penduduk Laki-Laki</th>\
+                        <td>' + (feature.properties['Penduduk Laki-Laki'] !== null ? autolinker.link(String(feature.properties['Penduduk Laki-Laki']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Penduduk Perempuan</th>\
+                        <td>' + (feature.properties['Penduduk Perempuan'] !== null ? autolinker.link(String(feature.properties['Penduduk Perempuan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Penduduk Yang Bekerja</th>\
+                        <td>' + (feature.properties['Penduduk Yang Bekerja'] !== null ? autolinker.link(String(feature.properties['Penduduk Yang Bekerja']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai Petani</th>\
+                        <td>' + (feature.properties['Sebagai Petani'] !== null ? autolinker.link(String(feature.properties['Sebagai Petani']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai Pedagang</th>\
+                        <td>' + (feature.properties['Sebagai Pedagang'] !== null ? autolinker.link(String(feature.properties['Sebagai Pedagang']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai Pejabat Negara</th>\
+                        <td>' + (feature.properties['Sebagai Pejabat Negara'] !== null ? autolinker.link(String(feature.properties['Sebagai Pejabat Negara']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai PNS/TNI/Polri</th>\
+                        <td>' + (feature.properties['Sebagai PNS/TNI/Polri'] !== null ? autolinker.link(String(feature.properties['Sebagai PNS/TNI/Polri']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai Swasta</th>\
+                        <td>' + (feature.properties['Sebagai Swasta'] !== null ? autolinker.link(String(feature.properties['Sebagai Swasta']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai Pensiunan</th>\
+                        <td>' + (feature.properties['Sebagai Pensiunan'] !== null ? autolinker.link(String(feature.properties['Sebagai Pensiunan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sebagai Pekerja Lepas</th>\
+                        <td>' + (feature.properties['Sebagai Pekerja Lepas'] !== null ? autolinker.link(String(feature.properties['Sebagai Pekerja Lepas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Penduduk Yang Tidak Bekerja</th>\
+                        <td>' + (feature.properties['Penduduk Yang Tidak Bekerja'] !== null ? autolinker.link(String(feature.properties['Penduduk Yang Tidak Bekerja']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Disabilitas</th>\
+                        <td>' + (feature.properties['Disabilitas'] !== null ? autolinker.link(String(feature.properties['Disabilitas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Pakatto_2_0(feature) {
+            switch(String(feature.properties['SLS'])) {
+                case 'RT 001 RW 001 DUSUN LANTEBUNG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(223,101,207,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 001 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(99,205,205,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 001 DUSUN PAKATTO LOMPO':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(209,140,238,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 001 DUSUN PARANG CARAMMENG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(185,217,98,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 002 DUSUN LANTEBUNG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,125,101,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 002 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,145,81,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 002 DUSUN PAKATTO LOMPO':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,40,207,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 002 DUSUN PARANG CARAMMENG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(112,15,209,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 003 DUSUN LANTEBUNG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(218,189,21,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 003 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(171,239,142,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 003 DUSUN PAKATTO LOMPO':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(25,231,186,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 001 RW 003 DUSUN PARANG CARAMMENG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(52,217,107,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 001 DUSUN LANTEBUNG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(238,162,30,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 001 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(61,183,217,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 001 DUSUN PAKATTO LOMPO':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(231,49,128,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 001 DUSUN PARANG CARAMMENG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(29,57,212,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 002 DUSUN LANTEBUNG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(70,15,208,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 002 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(114,237,184,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 002 DUSUN PAKATTO LOMPO':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(125,155,207,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 002 DUSUN PARANG CARAMMENG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(238,106,192,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 003 DUSUN LANTEBUNG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(88,211,102,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 003 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(193,200,54,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 003 DUSUN PAKATTO LOMPO':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(37,201,22,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 002 RW 003 DUSUN PARANG CARAMMENG':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(130,202,54,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 003 RW 001 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,43,87,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 003 RW 002 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,45,48,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RT 003 RW 003 DUSUN PAKATTO CADDI':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(99,176,231,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'SAWAH':
+                    return {
+                pane: 'pane_Pakatto_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(190,75,200,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Pakatto_2');
+        map.getPane('pane_Pakatto_2').style.zIndex = 402;
+        map.getPane('pane_Pakatto_2').style['mix-blend-mode'] = 'normal';
+        var layer_Pakatto_2 = new L.geoJson(json_Pakatto_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Pakatto_2',
+            layerName: 'layer_Pakatto_2',
+            pane: 'pane_Pakatto_2',
+            onEachFeature: pop_Pakatto_2,
+            style: style_Pakatto_2_0,
+        });
+        bounds_group.addLayer(layer_Pakatto_2);
+        map.addLayer(layer_Pakatto_2);
+        var overlaysTree = [
+            {label: 'Pakatto<br /><table><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW001DUSUNLANTEBUNG0.png" /></td><td>RT 001 RW 001 DUSUN LANTEBUNG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW001DUSUNPAKATTOCADDI1.png" /></td><td>RT 001 RW 001 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW001DUSUNPAKATTOLOMPO2.png" /></td><td>RT 001 RW 001 DUSUN PAKATTO LOMPO</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW001DUSUNPARANGCARAMMENG3.png" /></td><td>RT 001 RW 001 DUSUN PARANG CARAMMENG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW002DUSUNLANTEBUNG4.png" /></td><td>RT 001 RW 002 DUSUN LANTEBUNG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW002DUSUNPAKATTOCADDI5.png" /></td><td>RT 001 RW 002 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW002DUSUNPAKATTOLOMPO6.png" /></td><td>RT 001 RW 002 DUSUN PAKATTO LOMPO</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW002DUSUNPARANGCARAMMENG7.png" /></td><td>RT 001 RW 002 DUSUN PARANG CARAMMENG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW003DUSUNLANTEBUNG8.png" /></td><td>RT 001 RW 003 DUSUN LANTEBUNG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW003DUSUNPAKATTOCADDI9.png" /></td><td>RT 001 RW 003 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW003DUSUNPAKATTOLOMPO10.png" /></td><td>RT 001 RW 003 DUSUN PAKATTO LOMPO</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT001RW003DUSUNPARANGCARAMMENG11.png" /></td><td>RT 001 RW 003 DUSUN PARANG CARAMMENG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW001DUSUNLANTEBUNG12.png" /></td><td>RT 002 RW 001 DUSUN LANTEBUNG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW001DUSUNPAKATTOCADDI13.png" /></td><td>RT 002 RW 001 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW001DUSUNPAKATTOLOMPO14.png" /></td><td>RT 002 RW 001 DUSUN PAKATTO LOMPO</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW001DUSUNPARANGCARAMMENG15.png" /></td><td>RT 002 RW 001 DUSUN PARANG CARAMMENG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW002DUSUNLANTEBUNG16.png" /></td><td>RT 002 RW 002 DUSUN LANTEBUNG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW002DUSUNPAKATTOCADDI17.png" /></td><td>RT 002 RW 002 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW002DUSUNPAKATTOLOMPO18.png" /></td><td>RT 002 RW 002 DUSUN PAKATTO LOMPO</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW002DUSUNPARANGCARAMMENG19.png" /></td><td>RT 002 RW 002 DUSUN PARANG CARAMMENG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW003DUSUNLANTEBUNG20.png" /></td><td>RT 002 RW 003 DUSUN LANTEBUNG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW003DUSUNPAKATTOCADDI21.png" /></td><td>RT 002 RW 003 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW003DUSUNPAKATTOLOMPO22.png" /></td><td>RT 002 RW 003 DUSUN PAKATTO LOMPO</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT002RW003DUSUNPARANGCARAMMENG23.png" /></td><td>RT 002 RW 003 DUSUN PARANG CARAMMENG</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT003RW001DUSUNPAKATTOCADDI24.png" /></td><td>RT 003 RW 001 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT003RW002DUSUNPAKATTOCADDI25.png" /></td><td>RT 003 RW 002 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_RT003RW003DUSUNPAKATTOCADDI26.png" /></td><td>RT 003 RW 003 DUSUN PAKATTO CADDI</td></tr><tr><td style="text-align: center;"><img src="legend/Pakatto_2_SAWAH27.png" /></td><td>SAWAH</td></tr></table>', layer: layer_Pakatto_2},
+            {label: '<img src="legend/Pakattocopy_1.png" /> Pakatto copy', layer: layer_Pakattocopy_1},
+            {label: "Here Wego Satellite", layer: layer_HereWegoSatellite_0, radioGroup: 'bm' },]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: true,
+        });
+        lay.addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Pakatto_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['SLS'] !== null?String('<div style="color: #ffffff; font-size: 9pt; font-weight: bold; font-family: \'Calibri\', sans-serif;">' + layer.feature.properties['SLS']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Pakatto_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_Pakatto_2,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'SLS'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_Pakatto_2]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Pakatto_2]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Pakatto_2]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Pakatto_2]);
+        });
+        </script>
+    </body>
+</html>
